@@ -1,57 +1,62 @@
 const nodemailer = require('nodemailer');
-const formidable = require('formidable');
-const fs = require('fs');
+const multer = require('multer');
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const form = new formidable.IncomingForm();
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        res.status(500).json({ message: 'Error parsing form data' });
-        return;
-      }
+// Set up storage for multer (in-memory storage for file upload)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).array('attachments');
 
-      const { from, subject, message } = fields;
-      const attachment = files.file;
+// Create a transporter using Gmail's SMTP server
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',  // Gmail's SMTP server
+    port: 587,               // TLS port
+    secure: false,           // Use TLS
+    auth: {
+        user: process.env.GMAIL_USER,  // Your Gmail address
+        pass: process.env.GMAIL_PASS,  // Your Gmail App password or regular password
+    },
+});
 
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        auth: {
-          user: 'apikey', // SendGrid's API key username
-          pass: process.env.SENDGRID_API_KEY, // Your SendGrid API key
-        },
-      });
-      
-      
+// API route for sending the email
+module.exports = async (req, res) => {
+    if (req.method === 'POST') {
+        // Parse the incoming form data with file attachments
+        upload(req, res, async (err) => {
+            if (err) {
+                console.error('Error uploading file:', err);
+                return res.status(400).json({ error: 'Error uploading file' });
+            }
 
-      const mailOptions = {
-        to: process.env.GMAIL_USER,
-        from,
-        subject,
-        text: message,
-        attachments: [
-            {
-              filename: attachment.originalFilename,
-              path: attachment.filepath,
-            },
-          ],
-      };
+            const { email, subject, message } = req.body;
 
-      try {
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Email sent successfully!' });
-      } catch (error) {
-        res.status(500).json({ message: 'Failed to send email', error });
-      }
-    });
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
-  }
-}
+            const mailOptions = {
+                from: process.env.GMAIL_USER,  // Sender's email address
+                to: email,                    // Recipient's email address
+                subject: subject,             // Subject of the email
+                text: message,                // Body of the email
+                attachments: [],              // To store attachments
+            };
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
+            // Add files to the attachments array
+            if (req.files) {
+                req.files.forEach(file => {
+                    mailOptions.attachments.push({
+                        filename: file.originalname,
+                        content: file.buffer,
+                        encoding: 'base64',
+                    });
+                });
+            }
+
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log('Email sent: ' + info.response);
+                res.status(200).json({ message: 'Email sent successfully!' });
+            } catch (error) {
+                console.error('Error sending email:', error);
+                res.status(500).json({ error: 'Error sending email' });
+            }
+        });
+    } else {
+        res.status(405).json({ error: 'Method Not Allowed' });
+    }
 };
