@@ -1,0 +1,11 @@
+{
+    "version": 2,
+
+    "routes": [
+      {
+        "src": "/api/sendEmail",
+        "dest": "/api/sendEmail.js"
+      }
+    ]
+  }
+  
