@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
             }
 
             try {
-                const info = await transporter.sendMail(mailOptions);
+                const info = await transporter.sendEmail(mailOptions);
                 console.log('Email sent: ' + info.response);
                 res.status(200).json({ message: 'Email sent successfully!' });
             } catch (error) {
