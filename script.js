@@ -7,21 +7,21 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
     const fileInput = document.getElementById('file');
     const files = fileInput.files;
 
-    
-    const data = {
-        email,
-        subject,
-        message
-    };
+    // Create FormData to handle file attachments
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('subject', subject);
+    formData.append('message', message);
 
     // Append each file to FormData
     for (let i = 0; i < files.length; i++) {
-        data.append('attachments', files[i]);
+        formData.append('attachments', files[i]);
     }
 
+    // Send the form data to your backend
     fetch('https://mail-with-attachment.vercel.app/api/sendMail', { // Replace with your deployed Vercel URL
         method: 'POST',
-        body: data,
+        body: formData, // Send FormData directly
     })
     .then(response => response.json())
     .then(data => {
