@@ -1,51 +1,98 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.email-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
 }
 
-h1 {
-  text-align: center;
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 label {
-  margin: 10px 0 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }
 
-input, textarea, button {
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 10px;
+input[type="email"],
+input[type="text"],
+textarea,
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+textarea {
+    resize: vertical;
+    height: 120px;
 }
 
 button {
-  background: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background: #0056b3;
+    background-color: #45a049;
 }
 
-#response {
-  text-align: center;
-  margin-top: 10px;
-  color: green;
+button:active {
+    background-color: #398439;
+}
+
+input[type="email"]:focus,
+input[type="text"]:focus,
+textarea:focus,
+input[type="file"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+input[type="file"] {
+    padding: 5px;
+    font-size: 14px;
+}
+
+form p {
+    font-size: 14px;
+    color: red;
+    margin-top: 10px;
+    text-align: center;
 }
