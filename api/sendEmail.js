@@ -15,36 +15,15 @@ export default async function handler(req, res) {
       const attachment = files.file;
 
       const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: 'smtp.sendgrid.net',
+        port: 587,
         auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
+          user: 'apikey', // SendGrid's API key username
+          pass: process.env.SENDGRID_API_KEY, // Your SendGrid API key
         },
-        logger: true,  // Logs SMTP details to the console
-        debug: true,   // Enables debugging
       });
-      const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const msg = {
-  to: 'onlyrithi@gmail.com',
-  from: 'your-email@gmail.com',
-  subject: 'Test Email with Attachment',
-  text: 'This is a test email.',
-  attachments: [
-    {
-      content: fileContent.toString('base64'),
-      filename: 'test.txt',
-      type: 'text/plain',
-      disposition: 'attachment',
-    },
-  ],
-};
-
-sgMail.send(msg)
-  .then(() => console.log('Email sent'))
-  .catch((error) => console.error('Error sending email:', error));
-
+      
+      
 
       const mailOptions = {
         to: process.env.GMAIL_USER,
