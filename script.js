@@ -4,7 +4,7 @@ document.getElementById('emailForm').addEventListener('submit', async function (
     const formData = new FormData(this);
     
     try {
-      const response = await fetch('/api/sendEmail', {
+      const response = await fetch('https://mail-with-attachment.vercel.app/api/sendEmail', {
         method: 'POST',
         body: formData
       });
