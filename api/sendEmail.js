@@ -15,12 +15,15 @@ export default async function handler(req, res) {
       const attachment = files.file;
 
       const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: 'smtp.gmail.com',  // Gmail's SMTP server
+        port: 587,               // TLS port
+        secure: false,           // Use TLS
         auth: {
-          user: process.env.GMAIL_USER, // Your Gmail address
-          pass: process.env.GMAIL_PASS, // Your Gmail app password
+            user: process.env.GMAIL_USER,  // Your Gmail address
+            pass: process.env.GMAIL_PASS,  // Your Gmail App password or regular password
         },
-      });
+    });
+      
 
       const mailOptions = {
         to: process.env.GMAIL_USER,
@@ -28,11 +31,11 @@ export default async function handler(req, res) {
         subject,
         text: message,
         attachments: [
-          {
-            filename: attachment.originalFilename,
-            path: attachment.filepath,
-          },
-        ],
+            {
+              filename: file.originalFilename,
+              path: file.filepath,
+            },
+          ],
       };
 
       try {
