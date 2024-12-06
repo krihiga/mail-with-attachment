@@ -15,15 +15,36 @@ export default async function handler(req, res) {
       const attachment = files.file;
 
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',  // Gmail's SMTP server
-        port: 587,               // TLS port
-        secure: false,           // Use TLS
+        service: 'Gmail',
         auth: {
-            user: process.env.GMAIL_USER,  // Your Gmail address
-            pass: process.env.GMAIL_PASS,  // Your Gmail App password or regular password
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
         },
-    });
-      
+        logger: true,  // Logs SMTP details to the console
+        debug: true,   // Enables debugging
+      });
+      const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const msg = {
+  to: 'onlyrithi@gmail.com',
+  from: 'your-email@gmail.com',
+  subject: 'Test Email with Attachment',
+  text: 'This is a test email.',
+  attachments: [
+    {
+      content: fileContent.toString('base64'),
+      filename: 'test.txt',
+      type: 'text/plain',
+      disposition: 'attachment',
+    },
+  ],
+};
+
+sgMail.send(msg)
+  .then(() => console.log('Email sent'))
+  .catch((error) => console.error('Error sending email:', error));
+
 
       const mailOptions = {
         to: process.env.GMAIL_USER,
@@ -32,8 +53,8 @@ export default async function handler(req, res) {
         text: message,
         attachments: [
             {
-              filename: file.originalFilename,
-              path: file.filepath,
+              filename: attachment.originalFilename,
+              path: attachment.filepath,
             },
           ],
       };
