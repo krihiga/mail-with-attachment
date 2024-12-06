@@ -2,15 +2,16 @@
   "name": "email-sender",
   "version": "1.0.0",
   "description": "A Node.js app to send emails with attachments using Nodemailer",
-  "main": "sendEmail.js",
   "scripts": {
-    "start": "node sendEmail.js",
+    "start": "node sendMail.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.4",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "formidable": "^3.5.2",
-    "fs": "^0.0.1-security",
+    "googleapis": "^118.0.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16"
   },
