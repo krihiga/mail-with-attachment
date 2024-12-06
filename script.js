@@ -21,9 +21,14 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
     // Send the form data to your backend
     fetch('https://mail-with-attachment.vercel.app/api/sendMail', { // Replace with your deployed Vercel URL
         method: 'POST',
-        body: formData, // Send FormData directly
+        body: formData,
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to send email');
+        }
+        return response.json();
+    })
     .then(data => {
         alert(data.message || 'Email sent successfully!');
     })
@@ -31,4 +36,4 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
         console.error('Error sending email:', error);
         alert('Error sending email: ' + error.message);
     });
-});
+})    

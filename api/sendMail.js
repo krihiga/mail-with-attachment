@@ -26,6 +26,10 @@ module.exports = async (req, res) => {
                 return res.status(400).json({ error: 'Error uploading file' });
             }
 
+            // Log the incoming form data to check
+            console.log('Form Data:', req.body);
+            console.log('Files:', req.files);
+
             const { email, subject, message } = req.body;
 
             const mailOptions = {
